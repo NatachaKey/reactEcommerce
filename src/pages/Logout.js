@@ -2,30 +2,20 @@ import React, { useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { useUserContext } from '../context/user_context';
 
-const rootUrl = 'https://ecommerce-6kwa.onrender.com';
-
 const Logout = () => {
   const [redirectToHome, setRedirectToHome] = useState(false);
-  const { handleLogout } = useUserContext();
-
-  // const handleLogout = async () => {
-  //   try {
-  //     const url = `${rootUrl}/api/v1/auth/logout`;
-  //     const response = await fetch(url);
-  //
-  //     if (response.ok) {
-  //       console.log("Logout successful");
-  //       setRedirectToHome(true);
-  //     } else {
-  //       console.log("Logout failed");
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  const { handleLogout, authLoading, authError } = useUserContext();
 
   if (redirectToHome) {
     return <Redirect to='/' />;
+  }
+
+  if (authLoading) {
+    return <span>Logging out...</span>;
+  }
+
+  if (authError) {
+    return <span>Encountered error logging out</span>;
   }
 
   return (

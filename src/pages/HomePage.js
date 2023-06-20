@@ -4,9 +4,8 @@ import AddProduct from './AddProduct';
 import { useUserContext } from '../context/user_context';
 
 const HomePage = () => {
-  const { authState } = useUserContext();
-  const isAdminLoggedIn = authState?.currentUser?.role === 'admin';
-  // need to check here if user.role === 'admin'- show <AddProduct/> component
+  const { currentUser } = useUserContext();
+  const isAdminLoggedIn = currentUser?.role === 'admin';
 
   return (
     <main>

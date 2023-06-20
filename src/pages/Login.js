@@ -7,32 +7,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [redirectToHome, setRedirectToHome] = useState(false);
   const [userName, setUserName] = useState('');
-  const { handleLogin } = useUserContext();
-
-  // const handleLogin = async (user) => {
-  //   try {
-  //     const url = `${rootUrl}/api/v1/auth/login`;
-  //     const response = await fetch(url, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(user),
-  //     });
-  //
-  //     if (response.ok) {
-  //       console.log("Login successful");
-  //       setUserName(user.name);
-  //       return true;
-  //     } else {
-  //       console.log("Login failed");
-  //       return false;
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     return false;
-  //   }
-  // };
+  const { handleLogin, authLoading, authError } = useUserContext();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,6 +23,14 @@ const Login = () => {
 
   if (redirectToHome) {
     return <Redirect to='/' />;
+  }
+
+  if (authLoading) {
+    return <span>Logging in...</span>;
+  }
+
+  if (authError) {
+    return <span>Encountered error logging in</span>;
   }
 
   return (
