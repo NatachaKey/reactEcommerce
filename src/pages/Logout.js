@@ -1,31 +1,36 @@
 import React, { useState } from 'react';
-import { Link, Redirect } from 'react-router-dom';
-import { useUserContext } from '../context/user_context';
+import { Redirect } from 'react-router-dom';
+import axios, { AxiosError } from 'axios';
 
 const rootUrl = 'https://ecommerce-6kwa.onrender.com';
 
 const Logout = () => {
   const [redirectToHome, setRedirectToHome] = useState(false);
-  const { handleLogout } = useUserContext();
+  const [logoutLoading, setLogoutLoading] = useState(false);
 
-  // const handleLogout = async () => {
-  //   try {
-  //     const url = `${rootUrl}/api/v1/auth/logout`;
-  //     const response = await fetch(url);
-  //
-  //     if (response.ok) {
-  //       console.log("Logout successful");
-  //       setRedirectToHome(true);
-  //     } else {
-  //       console.log("Logout failed");
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  const handleLogout = async () => {
+    setLogoutLoading(true);
+    try {
+      const url = `${rootUrl}/api/v1/auth/logout`;
+      const response = await axios.get(url);
+      console.log(response);
+      setLogoutLoading(false);
+      return true;
+    } catch (error) {
+      const errorPayload =
+        error instanceof AxiosError ? error.response.data : error;
+      console.error(errorPayload);
+      setLogoutLoading(false);
+      return false;
+    }
+  };
 
   if (redirectToHome) {
     return <Redirect to='/' />;
+  }
+
+  if (logoutLoading) {
+    return <span>Logging you out...</span>;
   }
 
   return (

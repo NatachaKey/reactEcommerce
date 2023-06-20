@@ -1,37 +1,34 @@
 import React, { useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import { useUserContext } from '../context/user_context';
+import axios, { AxiosError } from 'axios';
+
+const rootUrl = 'https://ecommerce-6kwa.onrender.com';
 
 const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [redirectToHome, setRedirectToHome] = useState(false);
-  const { handleRegister } = useUserContext();
+  const [registerLoading, setRegisterLoading] = useState(false);
 
-  // const handleRegister = async (user) => {
-  //   try {
-  //     const url = `${rootUrl}/api/v1/auth/register`;
-  //     const response = await fetch(url, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(user),
-  //     });
-  //
-  //     if (response.ok) {
-  //       console.log("Registration successful");
-  //       return true;
-  //     } else {
-  //       console.log("Registration failed");
-  //       return false;
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     return false;
-  //   }
-  // };
+  const handleRegister = async (userCredentials) => {
+    setRegisterLoading(true);
+    try {
+      const url = `${rootUrl}/api/v1/auth/register`;
+      const response = await axios.post(url, userCredentials, {
+        withCredentials: true,
+      });
+      console.log(response);
+      setRegisterLoading(false);
+      return true;
+    } catch (error) {
+      const errorPayload =
+        error instanceof AxiosError ? error.response.data : error;
+      console.error(errorPayload);
+      setRegisterLoading(false);
+      return false;
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,6 +45,10 @@ const Register = () => {
 
   if (redirectToHome) {
     return <Redirect to='/' />;
+  }
+
+  if (registerLoading) {
+    return <span>Registering...</span>;
   }
 
   return (

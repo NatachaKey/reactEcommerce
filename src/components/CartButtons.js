@@ -1,27 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaShoppingCart, FaUserMinus, FaUserPlus } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useProductsContext } from '../context/products_context';
-import { useUserContext } from '../context/user_context';
+import axios, { AxiosError } from 'axios';
+
+const rootUrl = 'https://ecommerce-6kwa.onrender.com';
 
 //vart-btn-wrapper- global class- see in Navbar.js it is display none on a default screen, nested class in NavContainer = styled...
 const CartButtons = () => {
   const { closeSidebar } = useProductsContext(); // extracting the closeSidebar function from the returned object from useProductsContext() and assigning it to a variable named closeSidebar.
-  const { authState } = useUserContext();
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      const url = `${rootUrl}/api/v1/users/showMe`;
+      axios
+        .get(url, { withCredentials: true })
+        .then((response) => {
+          console.log(response);
+          setCurrentUser(response.data.user);
+        })
+        .catch((error) => {
+          const errorPayload =
+            error instanceof AxiosError ? error.response.data : error;
+          console.error(errorPayload);
+        });
+    }
+    fetchData();
+    // By using empty array [], for the "dependencies" argument of useEffect, it tells React to run this useEffect hook only *once*, the first time this component/context is rendered
+  }, []);
 
   return (
     <Wrapper className='cart-btn-wrapper'>
       <Link to='/login' className='cart-btn'>
-        <span>{authState?.currentUser?.name}</span>
-        {!authState?.currentUser && (
+        <span>{currentUser?.name}</span>
+        {!currentUser && (
           <span>
             <FaUserPlus />
           </span>
         )}
       </Link>
 
-      {authState?.currentUser && (
+      {currentUser && (
         <Link to='/logout' className='cart-btn'>
           <span>
             <FaUserMinus />

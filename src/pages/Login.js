@@ -1,38 +1,34 @@
 import React, { useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import { useUserContext } from '../context/user_context';
+import axios, { AxiosError } from 'axios';
+
+const rootUrl = 'https://ecommerce-6kwa.onrender.com';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [redirectToHome, setRedirectToHome] = useState(false);
   const [userName, setUserName] = useState('');
-  const { handleLogin } = useUserContext();
+  const [loginLoading, setLoginLoading] = useState(false);
 
-  // const handleLogin = async (user) => {
-  //   try {
-  //     const url = `${rootUrl}/api/v1/auth/login`;
-  //     const response = await fetch(url, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(user),
-  //     });
-  //
-  //     if (response.ok) {
-  //       console.log("Login successful");
-  //       setUserName(user.name);
-  //       return true;
-  //     } else {
-  //       console.log("Login failed");
-  //       return false;
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     return false;
-  //   }
-  // };
+  const handleLogin = async (userCredentials) => {
+    setLoginLoading(true);
+    try {
+      const url = `${rootUrl}/api/v1/auth/login`;
+      const response = await axios.post(url, userCredentials, {
+        withCredentials: true,
+      });
+      console.log(response);
+      setLoginLoading(false);
+      return true;
+    } catch (error) {
+      const errorPayload =
+        error instanceof AxiosError ? error.response.data : error;
+      console.error(errorPayload);
+      setLoginLoading(false);
+      return false;
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,6 +44,10 @@ const Login = () => {
 
   if (redirectToHome) {
     return <Redirect to='/' />;
+  }
+
+  if (loginLoading) {
+    return <span>Logging in...</span>;
   }
 
   return (
