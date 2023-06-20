@@ -3,33 +3,30 @@ import { FaShoppingCart, FaUserMinus, FaUserPlus } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useProductsContext } from "../context/products_context";
+import { useUserContext } from "../context/user_context";
 
 //vart-btn-wrapper- global class- see in Navbar.js it is display none on a default screen, nested class in NavContainer = styled...
 const CartButtons = () => {
-  console.log("RENDERING CART BUTTONS");
   const { closeSidebar } = useProductsContext(); // extracting the closeSidebar function from the returned object from useProductsContext() and assigning it to a variable named closeSidebar.
-  const [isLoginVisible, setIsLoginVisible] = useState(true);
-  console.log("isLoginVisible", isLoginVisible);
+  const { authState } = useUserContext();
 
-  const handleLoginClick = () => {
-    setIsLoginVisible(false);
-  };
 
   return (
     <Wrapper className="cart-btn-wrapper">
-      <Link to="/login" className="cart-btn" onClick={handleLoginClick}>
-        {isLoginVisible && (
+      <Link to="/login" className="cart-btn">
+        <span>{authState.currentUser?.name}</span>
+        {!authState.currentUser && (
           <span>
             <FaUserPlus />
           </span>
         )}
       </Link>
 
-      <Link to="/logout" className="cart-btn" onClick={handleLoginClick}>
+      {authState.currentUser && (<Link to="/logout" className="cart-btn">
         <span>
           <FaUserMinus />
         </span>
-      </Link>
+      </Link>)}
 
       <Link to="/cart" className="cart-btn" onClick={closeSidebar}>
         <span>
