@@ -1,13 +1,13 @@
-import React from "react";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
-import heroBcg from "../assets/hero-bcg.jpg";
-import heroBcg2 from "../assets/hero-bcg-2.jpg";
+import React from 'react';
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+import heroBcg from '../assets/hero-bcg.jpg';
+import heroBcg2 from '../assets/hero-bcg-2.jpg';
 
 const Hero = () => {
   return (
-    <Wrapper className="section-center">
-      <article className="content">
+    <Wrapper className='section-center'>
+      <article className='content'>
         <h1>
           Your jewelry store <br />
           since 1921
@@ -18,14 +18,14 @@ const Hero = () => {
           pariatur, molestiae rerum rem, quis voluptas doloremque omnis deleniti
           magnam ea.
         </p>
-        <Link to="/products" className="btn hero-btn ">
-          {" "}
-          shop now{" "}
+        <Link to='/products' className='btn hero-btn '>
+          {' '}
+          shop now{' '}
         </Link>
       </article>
-      <article className="img-container">
-        <img src={heroBcg} alt="image" className="main-img" />
-        <img src={heroBcg2} alt="image2" className="accent-img" />
+      <article className='img-container'>
+        <img src={heroBcg} alt='image' className='main-img' />
+        <img src={heroBcg2} alt='image2' className='accent-img' />
       </article>
     </Wrapper>
   );
@@ -81,7 +81,7 @@ const Wrapper = styled.section`
       border-radius: var(--radius);
     }
     .img-container::before {
-      content: "";
+      content: '';
       position: absolute;
       width: 10%;
       height: 80%;

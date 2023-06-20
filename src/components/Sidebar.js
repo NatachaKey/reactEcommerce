@@ -1,12 +1,12 @@
-import React from "react";
-import logo from "../assets/logo.jpg";
-import { Link } from "react-router-dom"; //set up links
-import { useProductsContext } from "../context/products_context"; //set up toggle functionality globally
-import { FaTimes } from "react-icons/fa";
-import { links } from "../utils/constants";
-import styled from "styled-components";
-import CartButtons from "./CartButtons";
-import { useUserContext } from "../context/user_context"; //gets the value if user is logged in or not (to display/hide checkout)
+import React from 'react';
+import logo from '../assets/logo.jpg';
+import { Link } from 'react-router-dom'; //set up links
+import { useProductsContext } from '../context/products_context'; //set up toggle functionality globally
+import { FaTimes } from 'react-icons/fa';
+import { links } from '../utils/constants';
+import styled from 'styled-components';
+import CartButtons from './CartButtons';
+import { useUserContext } from '../context/user_context'; //gets the value if user is logged in or not (to display/hide checkout)
 
 const Sidebar = () => {
   const { isSidebarOpen, closeSidebar } = useProductsContext();
@@ -14,15 +14,15 @@ const Sidebar = () => {
   return (
     <SidebarContainer>
       <aside
-        className={`${isSidebarOpen ? "sidebar show-sidebar " : "sidebar"}`}
+        className={`${isSidebarOpen ? 'sidebar show-sidebar ' : 'sidebar'}`}
       >
-        <div className="sidebar-header">
-          <img src={logo} className="logo" alt="VIP store" />
-          <button className="close-btn" type="button" onClick={closeSidebar}>
+        <div className='sidebar-header'>
+          <img src={logo} className='logo' alt='VIP store' />
+          <button className='close-btn' type='button' onClick={closeSidebar}>
             <FaTimes />
           </button>
         </div>
-        <ul className="links">
+        <ul className='links'>
           {links.map(({ id, text, url }) => {
             // destricuturing link - in id, text, url
             return (
@@ -34,7 +34,7 @@ const Sidebar = () => {
             );
           })}
           <li>
-            <Link to="/checkout" onClick={closeSidebar}>
+            <Link to='/checkout' onClick={closeSidebar}>
               Checkout
             </Link>
           </li>

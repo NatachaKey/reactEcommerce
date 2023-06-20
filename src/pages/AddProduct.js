@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState } from 'react';
+import axios from 'axios';
 
 //get error when adding a product- even if i login as admin
 //this component is seen by everyone but should be visible only to admin
 const AddProduct = () => {
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
-  const [description, setDescription] = useState("");
-  const [image, setImage] = useState("");
-  const [category, setCategory] = useState("");
-  const [company, setCompany] = useState("");
+  const [name, setName] = useState('');
+  const [price, setPrice] = useState('');
+  const [description, setDescription] = useState('');
+  const [image, setImage] = useState('');
+  const [category, setCategory] = useState('');
+  const [company, setCompany] = useState('');
   const [colors, setColors] = useState([]);
   const [featured, setFeatured] = useState(false);
   const [freeShipping, setFreeShipping] = useState(false);
@@ -18,11 +18,23 @@ const AddProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const formData = new FormData(); // instantiate a 'form-data' object in the browser to upload the image file
+    formData.set('image', image);
+    const imageResponse = await axios.post(
+      'https://ecommerce-6kwa.onrender.com/api/v1/products/uploadImage',
+      formData,
+      {
+        withCredentials: true,
+        headers: { 'Content-Type': 'multipart/form-data' },
+      }
+    );
+    console.dir(imageResponse);
+
     const product = {
       name,
       price,
       description,
-      image,
+      image: imageResponse.data.image,
       category,
       company,
       colors,
@@ -33,10 +45,11 @@ const AddProduct = () => {
 
     try {
       const response = await axios.post(
-        "https://ecommerce-6kwa.onrender.com/api/v1/products",
-        product
+        'https://ecommerce-6kwa.onrender.com/api/v1/products',
+        product,
+        { withCredentials: true }
       );
-      console.log("Product added successfully:", response.data);
+      console.log('Product added successfully:', response.data);
       // Reset form fields
       setName(response.data.name);
       setPrice(response.data.price);
@@ -49,7 +62,7 @@ const AddProduct = () => {
       setFreeShipping(response.data.freeShipping);
       setInventory(response.data.inventory);
     } catch (error) {
-      console.log("Error adding product:", error);
+      console.log('Error adding product:', error);
     }
   };
 
@@ -60,7 +73,7 @@ const AddProduct = () => {
         <div>
           <label>Name</label>
           <input
-            type="text"
+            type='text'
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
@@ -68,7 +81,7 @@ const AddProduct = () => {
         <div>
           <label>Price</label>
           <input
-            type="number"
+            type='number'
             value={price}
             onChange={(e) => setPrice(e.target.value)}
           />
@@ -82,11 +95,7 @@ const AddProduct = () => {
         </div>
         <div>
           <label>Image</label>
-          <input
-            type="text"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-          />
+          <input type='file' onChange={(e) => setImage(e.target.files[0])} />
         </div>
         <div>
           <label>Category</label>
@@ -94,33 +103,33 @@ const AddProduct = () => {
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           >
-            <option value="">Select Category</option>
-            <option value="office">Office</option>
-            <option value="kitchen">Kitchen</option>
-            <option value="bedroom">Bedroom</option>
+            <option value=''>Select Category</option>
+            <option value='office'>Office</option>
+            <option value='kitchen'>Kitchen</option>
+            <option value='bedroom'>Bedroom</option>
           </select>
         </div>
         <div>
           <label>Company</label>
           <select value={company} onChange={(e) => setCompany(e.target.value)}>
-            <option value="">Select Company</option>
-            <option value="ikea">IKEA</option>
-            <option value="liddy">Liddy</option>
-            <option value="marcos">Marcos</option>
+            <option value=''>Select Company</option>
+            <option value='ikea'>IKEA</option>
+            <option value='liddy'>Liddy</option>
+            <option value='marcos'>Marcos</option>
           </select>
         </div>
         <div>
           <label>Colors</label>
           <input
-            type="text"
-            value={colors.join(",")}
-            onChange={(e) => setColors(e.target.value.split(","))}
+            type='text'
+            value={(colors || []).join(',')}
+            onChange={(e) => setColors(e.target.value.split(','))}
           />
         </div>
         <div>
           <label>Featured</label>
           <input
-            type="checkbox"
+            type='checkbox'
             checked={featured}
             onChange={(e) => setFeatured(e.target.checked)}
           />
@@ -128,7 +137,7 @@ const AddProduct = () => {
         <div>
           <label>Free Shipping</label>
           <input
-            type="checkbox"
+            type='checkbox'
             checked={freeShipping}
             onChange={(e) => setFreeShipping(e.target.checked)}
           />
@@ -136,13 +145,13 @@ const AddProduct = () => {
         <div>
           <label>Inventory</label>
           <input
-            type="number"
+            type='number'
             value={inventory}
             onChange={(e) => setInventory(e.target.value)}
           />
         </div>
 
-        <button type="submit">Add Product</button>
+        <button type='submit'>Add Product</button>
       </form>
     </div>
   );

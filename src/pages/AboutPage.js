@@ -1,19 +1,19 @@
-import React from "react";
-import styled from "styled-components";
-import { PageHero } from "../components";
-import aboutImg from "../assets/hero-bcg.jpg";
+import React from 'react';
+import styled from 'styled-components';
+import { PageHero } from '../components';
+import aboutImg from '../assets/hero-bcg.jpg';
 
 const AboutPage = () => {
   return (
     <main>
-      <PageHero title="about" />
-      <Wrapper className="page section section-center">
+      <PageHero title='about' />
+      <Wrapper className='page section section-center'>
         {/* global classes- check index.css */}
-        <img src={aboutImg} alt="About image" />
+        <img src={aboutImg} alt='About image' />
         <article>
-          <div className="title">
+          <div className='title'>
             <h2>Our story</h2>
-            <div className="underline"></div>
+            <div className='underline'></div>
           </div>
           <p>
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi

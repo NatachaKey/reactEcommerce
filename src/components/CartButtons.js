@@ -1,34 +1,35 @@
-import React, { useState } from "react";
-import { FaShoppingCart, FaUserMinus, FaUserPlus } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
-import { useProductsContext } from "../context/products_context";
-import { useUserContext } from "../context/user_context";
+import React, { useState } from 'react';
+import { FaShoppingCart, FaUserMinus, FaUserPlus } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import { useProductsContext } from '../context/products_context';
+import { useUserContext } from '../context/user_context';
 
 //vart-btn-wrapper- global class- see in Navbar.js it is display none on a default screen, nested class in NavContainer = styled...
 const CartButtons = () => {
   const { closeSidebar } = useProductsContext(); // extracting the closeSidebar function from the returned object from useProductsContext() and assigning it to a variable named closeSidebar.
   const { authState } = useUserContext();
 
-
   return (
-    <Wrapper className="cart-btn-wrapper">
-      <Link to="/login" className="cart-btn">
-        <span>{authState.currentUser?.name}</span>
-        {!authState.currentUser && (
+    <Wrapper className='cart-btn-wrapper'>
+      <Link to='/login' className='cart-btn'>
+        <span>{authState?.currentUser?.name}</span>
+        {!authState?.currentUser && (
           <span>
             <FaUserPlus />
           </span>
         )}
       </Link>
 
-      {authState.currentUser && (<Link to="/logout" className="cart-btn">
-        <span>
-          <FaUserMinus />
-        </span>
-      </Link>)}
+      {authState?.currentUser && (
+        <Link to='/logout' className='cart-btn'>
+          <span>
+            <FaUserMinus />
+          </span>
+        </Link>
+      )}
 
-      <Link to="/cart" className="cart-btn" onClick={closeSidebar}>
+      <Link to='/cart' className='cart-btn' onClick={closeSidebar}>
         <span>
           Cart <FaShoppingCart />
         </span>

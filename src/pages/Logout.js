@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { Link, Redirect } from "react-router-dom";
-import { useUserContext } from "../context/user_context";
+import React, { useState } from 'react';
+import { Link, Redirect } from 'react-router-dom';
+import { useUserContext } from '../context/user_context';
 
-const rootUrl = "https://ecommerce-6kwa.onrender.com";
+const rootUrl = 'https://ecommerce-6kwa.onrender.com';
 
 const Logout = () => {
   const [redirectToHome, setRedirectToHome] = useState(false);
@@ -25,7 +25,7 @@ const Logout = () => {
   // };
 
   if (redirectToHome) {
-    return <Redirect to="/" />;
+    return <Redirect to='/' />;
   }
 
   return (
