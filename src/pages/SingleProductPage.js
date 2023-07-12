@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useProductsContext } from '../context/products_context';
-import { single_product_url as url } from '../utils/constants';
 import { formatPrice } from '../utils/helpers';
 import {
   Loading,
@@ -13,39 +12,13 @@ import {
 } from '../components';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import axios, { AxiosError } from 'axios';
 import UpdateProduct from './UpdateProduct';
 import DeleteProduct from './DeleteProduct';
 import Reviews from './Reviews';
-
-const rootUrl = 'https://ecommerce-6kwa.onrender.com';
-
+import { useUserContext } from "../context/user_context";
 
 const SingleProductPage = () => {
-  const [currentUser, setCurrentUser] = useState(null);
-  useEffect(() => {
-    async function fetchData() {
-      const url = `${rootUrl}/api/v1/users/showMe`;
-      axios
-        .get(url, { withCredentials: true })
-        .then((response) => {
-          console.log(response);
-
-          // if (response && response.data && response.data.user) {
-          //   return response.data.user;
-          // }
-
-          setCurrentUser(response?.data?.user);
-        })
-        .catch((error) => {
-          const errorPayload =
-            error instanceof AxiosError ? error?.response?.data : error;
-          console.error(errorPayload);
-        });
-    }
-    fetchData();
-    // By using empty array [], for the "dependencies" argument of useEffect, it tells React to run this useEffect hook only *once*, the first time this component/context is rendered
-  }, []);
+  const { currentUser } = useUserContext();
   const isAdminLoggedIn = currentUser?.role === 'admin';
 
   const { id } = useParams();
@@ -60,7 +33,7 @@ const SingleProductPage = () => {
   } = useProductsContext();
   //but i still cant fetch single product
   useEffect(() => {
-    fetchSingleProduct(url, id);
+    fetchSingleProduct(id);
     // eslint-disable-next-line
   }, [id]);
 
@@ -117,19 +90,27 @@ const SingleProductPage = () => {
               <span>Brand :</span>
               {company}
             </p>
-            
+
             <hr />
             {inventory > 0 && <AddToCart product={product} />}
             
           </section>
           <div>
-            {isAdminLoggedIn && <UpdateProduct productId={id}/>}
-         
-            {isAdminLoggedIn && <DeleteProduct productId={id}/>}
-            </div>
-<Reviews productId ={id}/>
-        </div>
+            {isAdminLoggedIn && (
+              <UpdateProduct
+                product={product}
+                onUpdate={() => fetchSingleProduct(id)}
+              />
+            )}
 
+            {isAdminLoggedIn && <DeleteProduct productId={id} />}
+          </div>
+          <Reviews
+            productId={id}
+            reviews={product.reviews || []}
+            onReviewChange={() => fetchSingleProduct(id)}
+          />
+        </div>
       </div>
     </Wrapper>
   );

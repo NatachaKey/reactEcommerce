@@ -1,58 +1,37 @@
-import React , { useState, useEffect }from 'react';
+import React from 'react';
 import { FaShoppingCart, FaUserMinus, FaUserPlus } from 'react-icons/fa';
-import { Link, Route, Switch } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useProductsContext } from '../context/products_context';
 import { useCartContext } from '../context/cart_context';
-import axios, { AxiosError } from 'axios';
+import { useUserContext } from '../context/user_context';
 import './styleicon.css';
-
-const rootUrl = 'https://ecommerce-6kwa.onrender.com';
 
 
 //vart-btn-wrapper- global class- see in Navbar.js it is display none on a default screen, nested class in NavContainer = styled...
 const CartButtons = () => {
   const { closeSidebar } = useProductsContext(); // extracting the closeSidebar function from the returned object from useProductsContext() and assigning it to a variable named closeSidebar.
-
+  const { currentUser } = useUserContext();
   const { total_items } = useCartContext();
-  const [currentUser, setCurrentUser] = useState(null);
-  useEffect(() => {
-    async function fetchData() {
-      const url = `${rootUrl}/api/v1/users/showMe`;
-      axios
-        .get(url, { withCredentials: true })
-        .then((response) => {
-          console.log(response);
-          setCurrentUser(response?.data?.user);
-        })
-        .catch((error) => {
-          const errorPayload =
-            error instanceof AxiosError ? error?.response?.data : error;
-          console.error(errorPayload);
-        });
-    }
-    fetchData();
-    // By using empty array [], for the "dependencies" argument of useEffect, it tells React to run this useEffect hook only *once*, the first time this component/context is rendered
-  }, []);
 
   return (
     <Wrapper className="cart-btn-wrapper">
-{!currentUser && (
-  <Link to='/login' className='cart-btn'>
+      {!currentUser && (
+        <Link to='/login' className='cart-btn' onClick={closeSidebar}>
           <span>
             <FaUserPlus />
           </span>
-          </Link>
+        </Link>
       )}
 
-{currentUser && (
-    <Link to='/logout' className='cart-btn'>
-    <span className='welcome'> Welcome {currentUser?.name} </span>
-    <span className='icon'>
+      {currentUser && (
+        <Link to='/logout' className='cart-btn' onClick={closeSidebar}>
+          <span className='welcome'> Welcome {currentUser?.name} </span>
+          <span className='icon'>
       <FaUserMinus />
     </span>
-  </Link>
-)}
+        </Link>
+      )}
 
       <Link to='/cart' className='cart-btn' onClick={closeSidebar}>
         
@@ -61,7 +40,7 @@ const CartButtons = () => {
           <span className='cart-value'>{total_items}</span>
         </span>
       </Link>
-      
+
     </Wrapper>
   );
 };

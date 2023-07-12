@@ -22,6 +22,7 @@ const initialState = {
   total_items: 0,
   total_amount: 0,
   shipping_fee: 15.45,
+  taxRate: 0.15
 };
 
 const CartContext = React.createContext();

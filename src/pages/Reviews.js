@@ -1,73 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
+import { useUserContext } from "../context/user_context";
+import { reviewApi } from '../api';
 
-const Reviews = ({ productId }) => {
-  // Fetch current user
-  const [currentUser, setCurrentUser] = useState(null);
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        const response = await axios.get(
-          'https://ecommerce-6kwa.onrender.com/api/v1/users/showMe',
-          { withCredentials: true }
-        );
-        setCurrentUser(response?.data?.user);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchCurrentUser();
-  }, []);
-
-  const user = currentUser;
+const Reviews = ({ productId, reviews, onReviewChange }) => {
+  // Fetch current user from context provider, and store it in the `user` variable
+  const { currentUser: user } = useUserContext();
   //console.log(user.userId); //user id
 
   const [message, setMessage] = useState('');
-  const [reviews, setReviews] = useState([]);
   const [formData, setFormData] = useState({
-    rating: Number,
+    rating: '',
     title: '',
     comment: '',
     product: productId
   });
 
-  // Get all reviews
-  useEffect(() => {
-    getAllReviews(productId);
-  }, [productId]);
-
-  const getAllReviews = async (productId) => {
-    try {
-      const response = await axios.get(
-        'https://ecommerce-6kwa.onrender.com/api/v1/reviews',
-        { withCredentials: true }
-      );
-      const allReviews = response.data.reviews;
-      const filteredReviews = allReviews.filter((review)=> review?.product?._id === productId)
-
-      setReviews(filteredReviews);
-      console.log('this is the result', filteredReviews);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const createReview = async (productId) => {
     try {
-      await axios.post(
-        'https://ecommerce-6kwa.onrender.com/api/v1/reviews',
-        formData,
-        { withCredentials: true }
-      );
+      await reviewApi.createReview(formData);
       setFormData({
-        rating:Number,
+        rating: '',
         title: '',
         comment: '',
         product: productId,
       });
 
       setMessage('Review created successfully');
-      await getAllReviews(productId);
+      onReviewChange();
     } catch (error) {
       console.error(error);
       if (error?.response?.status >= 400 && error?.response?.status < 500) {
@@ -80,11 +39,7 @@ const Reviews = ({ productId }) => {
 
   const updateReview = async (reviewId, productId) => {
     try {
-      await axios.patch(
-        `https://ecommerce-6kwa.onrender.com/api/v1/reviews/${reviewId}`,
-        formData,
-        { withCredentials: true }
-      );
+      await reviewApi.updateReview(reviewId, formData)
       setFormData({
         rating: Number,
         title: '',
@@ -92,7 +47,7 @@ const Reviews = ({ productId }) => {
         product: productId,
       });
       setMessage('Review updated successfully');
-      getAllReviews(productId);
+      onReviewChange();
     } catch (error) {
       console.error(error);
       if (error?.response?.status >= 400 && error?.response?.status < 500) {
@@ -105,12 +60,9 @@ const Reviews = ({ productId }) => {
 
   const deleteReview = async (reviewId) => {
     try {
-      await axios.delete(
-        `https://ecommerce-6kwa.onrender.com/api/v1/reviews/${reviewId}`,
-        { withCredentials: true }
-      );
+      await reviewApi.deleteReview(reviewId);
       setMessage('Review deleted successfully');
-      getAllReviews(productId);
+      onReviewChange();
     } catch (error) {
       console.error(error);
     }
@@ -135,14 +87,6 @@ const Reviews = ({ productId }) => {
         <p>
           <em>Max. one review per product</em>
         </p>
-        <label htmlFor="product">Product:</label>
-        <div>
-        <input
-          type="text"
-          name="product"
-          value={formData.product}
-          onChange={handleInputChange}
-        /></div>
         <label htmlFor="rating">Rating:</label>
         <div>
         <input

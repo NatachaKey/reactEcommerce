@@ -7,7 +7,7 @@ const Filters = () => {
   const {
     filters: {
       text,
-      category,
+      category: currentCategory,
       company,
       min_price,
       price,
@@ -53,7 +53,7 @@ const Filters = () => {
                     name="category"
                     type="button"
                     className={`${
-                      categories === category.toLowerCase() ? 'active' : null
+                      currentCategory === category.toLowerCase() ? 'active' : null
                     }`}
                   >
                     {category}
