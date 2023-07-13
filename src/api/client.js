@@ -10,6 +10,8 @@ const stringify = (object) => JSON.stringify(object, null, 2);
 
 // Common logging and error handling for all endpoints (kinda like middleware in Express backend)
 const requestMiddleware = (request) => {
+    console.log(request);
+    
     console.debug(`Log: Sending request. Path=${request.url} RequestParams=${stringify(request.params)} RequestData=${stringify(request.data)}`)
     return request
 }

@@ -29,7 +29,7 @@ const AddProduct = () => {
       
       const imageResponse = await productApi.uploadProductImage(productData.imageFile)
 
-      const product = { ...productData, image: imageResponse.data.image }
+      const product = { ...productData, image: imageResponse }
       
       const addedProduct = await addProduct(product);
 
