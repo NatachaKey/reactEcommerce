@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { Navbar, Sidebar, Footer } from './components';
+import { Navbar, Sidebar, Footer, StripeCheckout } from './components';
 
 import {
   Home,
@@ -54,6 +54,9 @@ function App() {
 
         <Route exact path="/orders">
           <Orders />
+        </Route>
+        <Route exact path="/orders/:id/pay">
+          <StripeCheckout />
         </Route>
         <Route path="*">
           <Error />

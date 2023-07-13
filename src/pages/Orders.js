@@ -5,6 +5,7 @@ import { useUserContext } from "../context/user_context";
 import { ReactComponent as ArrowIcon } from '../assets/icons/arrow-with-circle.svg'
 import { formatPrice } from '../utils/helpers';
 import { orderApi } from '../api';
+import CheckoutForm from '../components/StripeCheckout';
 
 const Orders = () => {
   const { currentUser } = useUserContext();
@@ -79,6 +80,7 @@ const Orders = () => {
           <h4>Order Confirmation:</h4>
           <p>Order ID: {order._id}</p>
           <p>Status: {order.status}</p>
+          <CheckoutForm/>
         </div>
       )}
     </div>
