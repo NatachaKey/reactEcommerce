@@ -24,7 +24,7 @@ const Orders = () => {
       shippingFee: shipping_fee,
       subtotal: total_amount,
       total: total_amount + shipping_fee + roundedTax,
-      orderItems: cart,
+      items: cart,
       user: user.userId,
       clientSecret: 'randomString',
     };
